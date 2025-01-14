@@ -79,8 +79,14 @@ class MCTS:
             node = self.expansion(node)
             reward = self.simulation(node)
             self.backpropagation(node, reward)
-        return self.get_best_child(root).state
 
+        best_child = self.get_best_child(root).state
+
+        if len(best_child.shape) == 1:
+            best_child = best_child.unsqueeze(0)
+
+        return best_child
+    
     def selection(self, node: Node) -> Node:
         """
         Traverse the tree to find a leaf Node by applying the UCB1 formula.
@@ -181,7 +187,11 @@ class MCTS:
         :param input_ids: The input token IDs to evaluate.
         :return: The reward value.
         """
-        outputs = self.model(input_ids.unsqueeze(0), labels=input_ids.unsqueeze(0))
+
+        if len(input_ids.shape) == 1:
+            input_ids = input_ids.unsqueeze(0)
+
+        outputs = self.model(input_ids, labels=input_ids)
         loss = outputs.loss
         return -loss.item()
 

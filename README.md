@@ -59,11 +59,12 @@ while len(input_tokens[0]) < MAX_TOTAL_TOKENS:
     mcts = MCTS(model, tokenizer, max_depth=MAX_DEPTH, num_simulations=MAX_SIMULATIONS, temperature=TEMPERATURE, max_new_tokens=MAX_NEW_TOKENS, stop_tokens=model.config.eos_token_id)
     
     new_tokens = mcts.search(input_tokens)
-    new_tokens = new_tokens[len(input_tokens[0]):]
-    
-    input_tokens = torch.cat([input_tokens, new_tokens.unsqueeze(0)], dim=-1)
 
-    print(tokenizer.decode(new_tokens), end='')
+    new_tokens = new_tokens[..., input_tokens.shape[-1]:]
+
+    input_tokens = torch.cat([input_tokens, new_tokens], dim=-1)
+
+    print(tokenizer.decode(new_tokens[0]), end='')
 
     if has_eos(new_tokens, eos_token=model.config.eos_token_id):
         break
