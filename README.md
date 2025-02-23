@@ -1,6 +1,8 @@
 # mtcs-pytorch
 A flexible Monte Carlo Tree Search framework with PyTorch for decision-making in language models.
 
+![MCTS Van Gogh-like painting](image_fx_-2.jpg)
+
 ## Installation
 
 To install the required dependencies, run:
